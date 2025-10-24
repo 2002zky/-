@@ -59,19 +59,102 @@ def autoNorm(dataSet):
     normDataSet = normDataSet/tile(ranges, (m, 1))     # 将减去最小值后的数据除以范围，实现归一化到[0,1]范围
     return normDataSet, ranges, minVals   # 返回归一化后的数据集、每列的范围和每列的最小值
 
-def datingClassTest():
     # 使用留出法：设置测试集比例（hold-out比例），这里使用50%的数据作为测试集
 
 #datingClassTest()
 
 def classify0(inX, dataSet, labels, k):
    #KNN分类核心代码
-
-def classify_person():
-    """
-    交互式输入三项特征，使用约会数据集做 KNN 分类，并输出印象结果。
-    """
-
-
-# —— 死循环调用 ——
-if __name__ == "__main__":
+dataSetSize=dataSet.shape[0]
+diffMat=tile(inx,(dataSetSize,1))-dataSet
+sqDiffMat=diffMat**2
+sqDistances=sqDiffMat.sum(axis=1)
+distances=sqDistances**0.5 
+sortedDistIndicies=distances.argsort()    
+classCount={}    
+for i in range(k):        
+    voteIlabel=data_labels[sortedDistIndicies[1]]
+    classCount[voteIlabel]=classCount.get(voteIlabel,0)+1        
+    sortedClassCount=sorted(classCount.items(),key=operator.itemgetter(1),reverse=True) 
+    return sortedClassCount[0][0]def file2matrix(filename):   
+    fr=open(filename)    
+    arrayOLines=fr.readlines()    
+    numberOfLines=len(arrayOLines)
+    returnMat=zeros((numberOfLines,3))    
+    classLabelVector=[]    
+    index=0    
+    for line in arrayOLines:        
+        line=line.strip()       
+        listFromLine=line.split('\t') 
+    returnMat[index,:]=listFromLine[0:3]       
+    classLabelVector.append(int (listFromLine[-1]))        
+    index+=1
+    return returnMat,classLabelVectorfile_path=r"e:\test\datingTestSet2.txt"
+    dating_data_mat,data_labels=file2matrix(file_path)
+    print(dating_data_mat)
+    print(data_labels)
+    plt.rcParams['font.sans-serif']=['SimHei']
+    plt.rcParams['axes.unicode_minus']=Falsefig=plt.figure()
+    ax=fig.add_subplot(111)
+    ax.scatter(dating_data_mat[:,1],dating_data_mat[:,2])
+    ax.scatter(dating_data_mat[:,1],dating_data_mat[:,2],15.0*array(data_labels),15.0*array(data_labels))
+    ax.set_xlabel('第二特征')
+    ax.set_ylabel('第三特征')
+    ax.set_title('特征关系散点图')
+    #plt.show()
+    def autoNorm(dataSet):    
+        minVals=dataSet.min(0)    
+        maxVals=dataSet.max(0)    
+        ranges=maxVals-minVals    
+        normDFataSet=zeros(shape(dataSet))    
+        m=dataSet.shape[0]    
+        normDataSet=dataSet-tile(minVals,(m,1))    
+        normDataSet=normDataSet/tile(ranges,(m,1))   
+         return 
+         normDataSet,ranges,minVals
+         normDataset,ranges,minVals=autoNorm(dating_data_mat)
+         print(normDataset)
+def datingClassTest():    
+    hoRatio=0.50    
+    dating_data_mat,data_labels=file2matrix(file_path)   
+    normMat,ranges,minVals=autoNorm(dating_data_mat)    
+    m=normMat.shape[0]    
+    numTestVecs=int(m*hoRatio)    
+    errorCount=0.0    
+    for i in range(numTestVecs):        
+        classifierResult=classify0(normMat[i,:],normMat[numTestVecs:m,:],data_labels[numTestVecs:m],3)        
+        print(f'分类器的预判结果：{classifierResult},真实结果：{data_labels[i]}')        
+        if(classifierResult!=data_labels[i]):errorCount+=1.0    
+        print(f'总错误率：{errorCount/float(numTestVecs)}')    
+        print(errorCount)
+        #datingClassTest()
+def classify_person():    
+    result_list = ['不感兴趣', '有点感兴趣', '非常感兴趣']    
+    try:        
+        percent_tats = input("业余时间花费在视频游戏上的时间比率（0~1,输入q退出）：")        
+        if percent_tats.lower() in ['q', 'exit']:           
+             return None        
+             percent_tats = float(percent_tats)        
+             ff_miles = float(input("每年飞行公里数："))        
+             ice_cream = float(input("每年消耗冰淇凌的升数："))    
+             except ValueError:        
+                print("输入必须是数字，请重新尝试。")        
+                return True    
+                dating_data_mat, data_labels = file2matrix(file_path)    
+                normMat, ranges, minvals = autoNorm(dating_data_mat)    
+                in_arr = array([ff_miles, percent_tats, ice_cream])    
+                classifier_result = classify0((in_arr-minVals)/ranges, normMat,data_labels, 3)    
+                idx = int(classifier_result) - 1    
+                desc = result_list[idx] 
+                if 0 <= idx < len(result_list) 
+                else str(classifier_result)    
+                print(f"你对这个人的印象是：{desc}")    
+                return True
+if __name__=="__main__":    
+    print("=== 约会数据 KNN 测试系统 ===")    
+    print("输入 'q' 或 'exit' 可以退出。")    
+        while True:        
+            flag=classify_person()        
+            if flag is None:            
+                print("程序已退出。")            
+            break
